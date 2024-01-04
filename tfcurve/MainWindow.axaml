@@ -2,13 +2,33 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:cc="using:tfcurve"
+        xmlns:cc="clr-namespace:tfcurve"
+        xmlns:vm="clr-namespace:tfcurve"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="tfcurve.MainWindow"
+        x:DataType="vm:MainWindowModel"
+        x:Name="root"
         Title="tfcurve">
 
-  <Grid ColumnDefinitions="200,*">
-    <ListBox x:Name="funlist" Grid.Column="0"></ListBox>
-    <cc:CurveView Grid.Column="1" Background="Transparent" />
+
+  <Window.Resources>
+    <cc:YScaleConverter x:Key="yscale_converter"/>
+  </Window.Resources>
+
+  <Grid ColumnDefinitions="300,*">
+    <ListBox x:Name="curve_list" Grid.Column="0" SelectionMode ="Multiple" ItemsSource ="{Binding CurveFuns,Mode = OneWay}">
+      <ListBox.ItemTemplate>
+        <DataTemplate>
+          <TextBlock Text="{Binding Name}"/>
+        </DataTemplate>
+      </ListBox.ItemTemplate>
+      <ListBox.ContextMenu>
+        <ContextMenu>
+          <MenuItem Header="Set Para" Command="{Binding #root.SetParam}" />
+        </ContextMenu>
+      </ListBox.ContextMenu>
+    </ListBox>
+    <cc:CurveControl x:Name="curve_control" Grid.Column="1" />
   </Grid>
+
 </Window>

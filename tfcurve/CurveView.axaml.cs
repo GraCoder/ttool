@@ -30,7 +30,6 @@ namespace tfcurve
         private double _unit = 180;
         private double _yscale = 1.0;
 
-        private bool _cap_mouse = false;
         private Point _prev_pos;
 
         private List<ICurve> _curves = [];
@@ -71,6 +70,8 @@ namespace tfcurve
                 InvalidateVisual();
             }
         }
+
+        public double ViewScale { get { return _scale; } set { _scale = value; InvalidateVisual(); } }
 
         public double YScale
         {
@@ -166,7 +167,8 @@ namespace tfcurve
             context.DrawLine(new Pen(new SolidColorBrush(Colors.Red), 2),
                 new Point(0, Math.Round(_offset.Y)), new Point(w, Math.Round(_offset.Y)));
 
-            context.DrawLine(new Pen(new SolidColorBrush(Colors.Lime), 2),
+            var g = new Avalonia.Media.Color(255, 0, 255, 0);
+            context.DrawLine(new Pen(new SolidColorBrush(g), 2),
                 new Point(Math.Round(_offset.X), 0), new Point(Math.Round(_offset.X), h));
 
             drawFuns(context);
@@ -176,22 +178,22 @@ namespace tfcurve
         {
             base.OnPointerPressed(e);
 
-            _cap_mouse = true;
-            _prev_pos = e.GetPosition(this);
+            if (e.GetCurrentPoint(this).Properties.IsLeftButtonPressed)
+            {
+                _prev_pos = e.GetPosition(this);
+            }
         }
 
         protected override void OnPointerReleased(PointerReleasedEventArgs e)
         {
             base.OnPointerReleased(e);
-
-            _cap_mouse = false;
         }
 
         protected override void OnPointerMoved(PointerEventArgs e)
         {
             base.OnPointerMoved(e);
 
-            if(_cap_mouse)
+            if(e.GetCurrentPoint(this).Properties.IsLeftButtonPressed)
             {
                 var pos = e.GetPosition(this);
                 _offset += (pos - _prev_pos);
@@ -216,6 +218,7 @@ namespace tfcurve
             _scale *= f;
             _scale = Math.Clamp(_scale, 0.001f, 1000000.0f);
             _offset = (_offset - pos) * _scale / s + pos;
+            ViewScale = _scale;
 
             InvalidateVisual();
         }
@@ -269,11 +272,6 @@ namespace tfcurve
             _scale = 1;
 
             InvalidateVisual();
-        }
-
-        public void Setting()
-        {
-
         }
     }
 }

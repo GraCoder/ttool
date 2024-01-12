@@ -3,20 +3,36 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="tfcurve.CurveControl"
+             xmlns:vm="clr-namespace:tfcurve"
              xmlns:cc="clr-namespace:tfcurve"
+             x:Class="tfcurve.CurveControl"
+             x:DataType="vm:CurveControlModel"
+             x:Name="root"
              >
-  <Panel>
-    <cc:CurveView x:Name="view" />
 
-    <Button x:Name="view_setting" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,10,16,0"
-    Content="Setting" Command="{Binding #view.Setting}" />
-    <Slider x:Name="view_scale" HorizontalAlignment="Right" Orientation="Vertical" Margin="0,50,0,100" />
-    <Button x:Name="view_center" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,16,60"
-        Content="Center" Command="{Binding #view.ResetCenter}" />
-    <Button x:Name="view_reset_scale" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,16,20"
-        Content="Reset Scale" Command="{Binding #view.ResetScale}"
-    />
+  <UserControl.ContextMenu>
+    <ContextMenu>
+      <MenuItem Header="Home" Command="{Binding #view.ResetCenter}" />
+      <MenuItem Header="Reset Scale" Command="{Binding #root.ResetScale}" />
+      <Separator/>
+      <MenuItem Header="Setting" Command="{Binding #root.Setting}" />
+    </ContextMenu>
+  </UserControl.ContextMenu>
+
+
+  <UserControl.Resources>
+    <cc:ViewSettingFlyout Placement="AnchorAndGravity" PlacementAnchor="TopRight" PlacementGravity="BottomLeft" x:Key="key_view_setting" />
+    <cc:SliderConverter x:Key="scale_converter" />
+  </UserControl.Resources>
+
+  <Panel>
+    <cc:CurveView x:Name="view">
+    </cc:CurveView>
+
+    <Slider x:Name="view_scale" HorizontalAlignment="Right" Orientation="Vertical" Margin="0,50,0,100" Opacity="0.7"
+        Minimum="-100" Maximum="100"
+        Value="{Binding #root.ViewScale}"
+      />
 
   </Panel>
 

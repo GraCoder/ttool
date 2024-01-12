@@ -12,7 +12,7 @@
 
 
   <Window.Resources>
-    <cc:YScaleConverter x:Key="yscale_converter"/>
+    <cc:SliderConverter x:Key="yscale_converter" />
   </Window.Resources>
 
   <Grid ColumnDefinitions="300,*">

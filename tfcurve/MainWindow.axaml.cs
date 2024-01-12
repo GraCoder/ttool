@@ -12,16 +12,6 @@ using tfcurve.curve;
 
 namespace tfcurve;
 
-class YScaleConverter : SliderConverter
-{
-    public YScaleConverter()
-    {
-        MinValue = 0.001;
-        MaxValue = 100;
-    }
-}
-
-
 public partial class MainWindow : Window
 {
     public MainWindow()

@@ -8,6 +8,7 @@ using Avalonia.Markup.Xaml;
 using Avalonia.Media;
 using Avalonia.Metadata;
 using tfcurve.curve;
+using Point = Avalonia.Point;
 
 namespace tfcurve;
 
@@ -37,23 +38,14 @@ public class ViewSettingFlyout : PopupFlyoutBase
 
 public partial class CurveControl : UserControl
 {
-    private double _view_scale = 0;
+    Point _prev_pos;
+    ViewSettingFlyout? _setting = null;
 
     public CurveControl()
     {
         InitializeComponent();
-    }
 
-    protected override void OnPointerMoved(PointerEventArgs e)
-    {
-        base.OnPointerMoved(e);
-    }
-
-    protected override void OnPointerWheelChanged(PointerWheelEventArgs e)
-    {
-        base.OnPointerWheelChanged(e);
-
-        //ViewScale = view.ViewScale;
+        DataContext = new CurveControlModel(this);
     }
 
     public void ClearCurve() { view.ClearCurve(); }
@@ -64,8 +56,8 @@ public partial class CurveControl : UserControl
 
     public void Setting()
     {
-        var fly = Resources["key_view_setting"] as ViewSettingFlyout;
-        fly.ShowAt(this);
+        _setting = Resources["key_view_setting"] as ViewSettingFlyout;
+        _setting.ShowAt(this);
     }
 
     public void Test()
@@ -75,19 +67,71 @@ public partial class CurveControl : UserControl
 
     public void ResetScale()
     {
-        view_scale.Value = 0; 
+        view_scale.Value = 0;
     }
 
-    public double ViewScale{
-        set
-        {
-            _view_scale = value;
-            view.ViewScale = Common.ScopeMap(-value, 0.001, 1000);
-        }
-
+    public double ViewScale
+    {
         get
         {
-            return _view_scale;
+            double s = Common.SliderMap(view.ViewScale, 0.001, 100);
+            return s;
         }
+
+        set
+        {
+            double s = Common.ScopeMap(value, 0.001, 100);
+            view.ViewScale = s;
+        }
+    }
+
+    protected override void OnPointerPressed(PointerPressedEventArgs e)
+    {
+        base.OnPointerPressed(e);
+
+        if (e.GetCurrentPoint(this).Properties.IsLeftButtonPressed)
+        {
+            _prev_pos = e.GetPosition(this);
+        }
+
+    }
+
+    protected override void OnPointerReleased(PointerReleasedEventArgs e)
+    {
+        base.OnPointerReleased(e);
+
+        if(_setting != null && _setting.IsOpen) {
+            _setting.Hide();
+        }
+    }
+
+    protected override void OnPointerMoved(PointerEventArgs e)
+    {
+        base.OnPointerMoved(e);
+
+        if (e.GetCurrentPoint(this).Properties.IsLeftButtonPressed)
+        {
+            var pos = e.GetPosition(this);
+            view.Offset += pos - _prev_pos;
+
+            _prev_pos = pos;
+
+            InvalidateVisual();
+        }
+    }
+
+    protected override void OnPointerWheelChanged(PointerWheelEventArgs e)
+    {
+        base.OnPointerWheelChanged(e);
+
+        double s = view.ViewScale;
+        var m = (CurveControlModel)DataContext;
+        m.ViewScale += e.Delta.Y * 0.1;
+
+        var pos = e.GetPosition(this);
+        var oft = view.Offset - pos;
+        view.Offset = (view.Offset - pos) * view.ViewScale / s + pos;
+
+        InvalidateVisual();
     }
 }

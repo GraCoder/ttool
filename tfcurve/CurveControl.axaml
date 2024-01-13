@@ -31,7 +31,7 @@
 
     <Slider x:Name="view_scale" HorizontalAlignment="Right" Orientation="Vertical" Margin="0,50,0,100" Opacity="0.7"
         Minimum="-100" Maximum="100"
-        Value="{Binding #root.ViewScale}"
+        Value="{Binding ViewScale, Mode=TwoWay}"
       />
 
   </Panel>

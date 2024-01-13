@@ -14,10 +14,13 @@ class Common
     public static double ScopeMap(double value, double min, double max)
     {
         double v = 0;
+        value = value / 100.0;
         if(value >= 0)
-            v = Math.Tan(value / 400.0 * Math.PI) * (max - 1) + 1;
+        {
+            v = Math.Pow(value, 2) * (max - 1) + 1;
+        }
         else 
-            v = -Math.Tan(-value / 400.0 * Math.PI) * (1 - min) + 1;
+            v = -Math.Pow(value, 2) * (1 - min) + 1;
         return v;
     }
 
@@ -25,10 +28,14 @@ class Common
     {
         double v = 0;
         if (value >= 1)
-            v = Math.Atan(value - 1) / Math.PI * 25;
+        {
+            v = Math.Sqrt((value - 1) / (max - 1));
+        }
         else
-            v = Math.Atan(1 - value) / Math.PI * 25;
-        return v;
+        {
+            v = -Math.Sqrt((1 - value) / (1 - min));
+        }
+        return v * 100.0;
     } 
 }
 

@@ -11,7 +11,7 @@
         x:Name="root"
         Title="DepthSetting">
 
-  <Grid ColumnDefinitions="*,*" RowDefinitions="*,*,*" Margin="20">
+  <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto,Auto" Margin="20">
     <RadioButton x:Name="NerMode" GroupName="1" Content="Near  0" Grid.Column="0" IsChecked ="{Binding NearMode}"/> 
     <RadioButton GroupName="1" Content="Near -1" Grid.Column="1" IsChecked="{Binding !NearMode}" />
     <NumericUpDown x:Name="NerInput" Grid.Row="1" Value ="{Binding Near}" ShowButtonSpinner="False"/>

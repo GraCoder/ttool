@@ -24,12 +24,13 @@ public class MainWindowModel : ViewModelBase
     public MainWindowModel()
     {
         _curves = new ObservableCollection<CurveObject> {
-                new CurveObject{ Name = "Sin", Curve =new SinCurve() },
-                new CurveObject{ Name = "Cos", Curve =new CosCurve() },
-                new CurveObject{ Name = "Tan", Curve =new TanCurve() },
-                new CurveObject{ Name = "Depth", Curve =new DepthCurve() },
-                new CurveObject{ Name = "Reinhard Tone", Curve =new ReinhardToneFun() },
-                new CurveObject{ Name = "Test", Curve =new TestCurve() }
+                new CurveObject{ Name = "Sin", Curve = new SinCurve() },
+                new CurveObject{ Name = "Cos", Curve = new CosCurve() },
+                new CurveObject{ Name = "Tan", Curve = new TanCurve() },
+                new CurveObject{ Name = "Depth", Curve = new DepthCurve() },
+                new CurveObject{ Name = "Reinhard Tone", Curve = new ReinhardToneFun() },
+                new CurveObject{ Name = "Quadratic", Curve = new Quadratic() },
+                new CurveObject{ Name = "Test", Curve = new TestCurve() },
         };
     }
 

@@ -28,7 +28,6 @@ public class ViewSettingFlyout : PopupFlyoutBase
         _presenter = new FlyoutPresenter
         {
             MinWidth = 100,
-            MaxWidth = 200,
             Content = new CurveControlSetting() 
         };
 
@@ -38,7 +37,7 @@ public class ViewSettingFlyout : PopupFlyoutBase
 
 public partial class CurveControl : UserControl
 {
-    Point _prev_pos;
+    Point ?_prev_pos = null;
     ViewSettingFlyout? _setting = null;
 
     public CurveControl()
@@ -100,6 +99,8 @@ public partial class CurveControl : UserControl
     {
         base.OnPointerReleased(e);
 
+        _prev_pos = null;
+
         if(_setting != null && _setting.IsOpen) {
             _setting.Hide();
         }
@@ -108,14 +109,11 @@ public partial class CurveControl : UserControl
     protected override void OnPointerMoved(PointerEventArgs e)
     {
         base.OnPointerMoved(e);
-
-        if (e.GetCurrentPoint(this).Properties.IsLeftButtonPressed)
+        if (_prev_pos != null && e.GetCurrentPoint(this).Properties.IsLeftButtonPressed)
         {
             var pos = e.GetPosition(this);
-            view.Offset += pos - _prev_pos;
-
+            view.Offset += pos - (Point)_prev_pos;
             _prev_pos = pos;
-
             InvalidateVisual();
         }
     }

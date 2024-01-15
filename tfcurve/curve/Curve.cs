@@ -58,6 +58,15 @@ public class CosCurve : SimpleCurve
     }
 }
 
+public class ExpCurve : SimpleCurve
+{
+    public ExpCurve()
+    {
+        _curveFun = Math.Exp;
+    }
+
+}
+
 public class TanCurve : ICurve
 {
     public void DrawCurve(DrawingContext context, double xmin, double xmax, Func<double, double> px2v, Func<double, double> v2py)

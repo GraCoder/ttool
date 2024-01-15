@@ -2,16 +2,42 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:tfcurve"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="tfcurve.CurveControlSetting">
+             x:Class="tfcurve.CurveControlSetting"
+             x:DataType="vm:CurveControlModel"
+             Width="400"
+             >
 
-  <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto" ColumnDefinitions="Auto,Auto">
-    <Button Content="1" Grid.Row="0" />
-    <Button Content="2" Grid.Row="1" />
-    <Button Grid.Row="2"  />
-    <Button Grid.Row="3"  />
-    <Button Grid.Row="4"  />
-    <Button Grid.Row="5"  />
+  <UserControl.Resources>
+    <vm:SliderConverter x:Key="y_scale_converter">
+      <x:Arguments>
+        <x:Double>0.01</x:Double>
+        <x:Double>100</x:Double>
+      </x:Arguments>
+    </vm:SliderConverter>
+    <vm:SliderConverter x:Key="grid_scale_converter">
+      <x:Arguments>
+        <x:Double>0.3</x:Double>
+        <x:Double>3</x:Double>
+      </x:Arguments>
+    </vm:SliderConverter>
+  </UserControl.Resources>
+
+  <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto" ColumnDefinitions="Auto,Auto,Auto" Margin="5,0,0,0">
+    <TextBlock Text="Unit" VerticalAlignment="Center" />
+    <ComboBox Grid.Column="1" SelectedIndex="{Binding UnitIndex}">
+      <ComboBoxItem>1</ComboBoxItem>
+      <ComboBoxItem>PI/2</ComboBoxItem>
+    </ComboBox>
+    
+    <TextBlock Text="Y Scale" Grid.Row="1" VerticalAlignment="Center"/>
+    <Button Grid.Row="1" Grid.Column="1" MinWidth="80" Content="{Binding YScale, Converter={StaticResource y_scale_converter},ConverterParameter=string}" Command="{Binding ResetYScale}"  />
+    <Slider Grid.Row="1" Grid.Column="2" Width="200" Minimum="-100" Value="{Binding YScale}" />
+
+    <TextBlock Text="Grid Scale" Grid.Row="2" VerticalAlignment="Center"/>
+    <Button Grid.Row="2" Grid.Column="1" MinWidth="80" Content="{Binding GridScale, Converter={StaticResource grid_scale_converter},ConverterParameter=string}" Command="{Binding ResetGridScale}"  />
+    <Slider Grid.Row="2" Grid.Column="2" Width="200" Minimum="-100" Value="{Binding GridScale}" />
 
   </Grid>
 </UserControl>

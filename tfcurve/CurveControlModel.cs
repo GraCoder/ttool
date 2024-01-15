@@ -14,10 +14,18 @@ namespace tfcurve
         CurveControl _control;
 
         double _view_scale = 0;
+        double _grid_scale = 0;
+        double _y_scale = 0;
 
         public CurveControlModel(CurveControl ctl)
         {
             _control = ctl;
+        }
+
+        public int UnitIndex
+        {
+            set { _control.view.UnitIndex = value; }
+            get { return _control.view.UnitIndex; }
         }
 
         public double ViewScale
@@ -29,5 +37,35 @@ namespace tfcurve
             }
         }
 
+        public double YScale
+        {
+            get { return _y_scale; }
+            set
+            {
+                _control.view.YScale = Common.ScopeMap(value, 0.01, 100);
+                this.RaiseAndSetIfChanged(ref _y_scale, value);
+            } 
+        }
+
+        public void ResetYScale()
+        {
+            YScale = 0;
+        }
+
+        public double GridScale
+        {
+            get { return _grid_scale; }
+
+            set
+            {
+                _control.view.GridScale = Common.ScopeMap(value, 0.3, 3);
+                this.RaiseAndSetIfChanged(ref _grid_scale, value);
+            }
+        }
+
+        public void ResetGridScale()
+        {
+            GridScale = 0;
+        }
     }
 }

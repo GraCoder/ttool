@@ -44,10 +44,22 @@ public class SliderConverter : IValueConverter
     public double MinValue { get; set; } = 0.1;
     public double MaxValue { get; set; } = 10;
 
+    public SliderConverter(double minValue, double maxValue)
+    {
+        MinValue = minValue;
+        MaxValue = maxValue;
+    } 
+
     object? IValueConverter.Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         if(value is double)
-            return Common.SliderMap((double)value, MinValue, MaxValue);
+        {
+            double v = Common.ScopeMap((double)value, MinValue, MaxValue);
+            if(parameter == "string")
+                return string.Format("{0:N3}", v);
+
+            return v;
+        }
 
         throw new NotImplementedException();
     }
@@ -55,7 +67,7 @@ public class SliderConverter : IValueConverter
     object? IValueConverter.ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         if(value is double)
-            return Common.ScopeMap((double)value, MinValue, MaxValue);
+            return Common.SliderMap((double)value, MinValue, MaxValue);
 
         throw new NotImplementedException();
     }

@@ -27,9 +27,12 @@ public class MainWindowModel : ViewModelBase
                 new CurveObject{ Name = "Sin", Curve = new SinCurve() },
                 new CurveObject{ Name = "Cos", Curve = new CosCurve() },
                 new CurveObject{ Name = "Tan", Curve = new TanCurve() },
-                new CurveObject{ Name = "Depth", Curve = new DepthCurve() },
-                new CurveObject{ Name = "Reinhard Tone", Curve = new ReinhardToneFun() },
                 new CurveObject{ Name = "Quadratic", Curve = new Quadratic() },
+                new CurveObject{ Name = "Exp", Curve = new ExpCurve() },
+                new CurveObject{ Name = "Depth", Curve = new DepthCurve() },
+                new CurveObject{ Name = "Reinhard Tone", Curve = new ReinhardToneCurve() },
+                new CurveObject{ Name = "CE Tone", Curve = new CEToneCurve() },
+                new CurveObject{ Name = "Filmic Tone", Curve = new FilmicToneCurve() },
                 new CurveObject{ Name = "Test", Curve = new TestCurve() },
         };
     }

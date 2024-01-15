@@ -22,7 +22,7 @@ public partial class MainWindow : Window
         //_funs["Cos"] = new CosCurve();
         //_funs["Tan"] = new TanCurve();
         //_funs["Depth"] = new DepthCurve();
-        //_funs["Reinhard Tone"] = new ReinhardToneFun();
+        //_funs["Reinhard Tone"] = new ReinhardToneCurve();
         //_funs["4"] = new TestObject();
         //_funs["5"] = new TestObject();
         //_funs["6"] = new TestObject();

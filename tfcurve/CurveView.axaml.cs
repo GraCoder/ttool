@@ -31,20 +31,12 @@ public partial class CurveView : UserControl
 
     private List<ICurve> _curves = [];
 
-    public int GridScale {  
-        get { 
-            if(_grid >= 180)
-                return (int)(_grid / 180.0 * 12.5 + 37.5);
-            else
-                return (int)(_grid / 180.0 * 62.5 - 12.5);
-        }
+    public double GridScale
+    {
+        get { return _grid / 180.0; }
         set
         {
-            if (value >= 50)
-                _grid = (value - 37.5) / 12.5 * 180;
-            else
-                _grid = (value + 12.5) / 62.5 * 180;
-
+            _grid = value * 180.0;
             InvalidateVisual();
         }
     }
@@ -98,6 +90,8 @@ public partial class CurveView : UserControl
     public CurveView()
     {
         InitializeComponent();
+
+        this.SizeChanged += ViewSizeChanged;
     }
 
     protected override Size MeasureOverride(Size availableSize)
@@ -107,9 +101,13 @@ public partial class CurveView : UserControl
 
     protected override Size ArrangeOverride(Size finalSize)
     {
-        _offset = new Point(finalSize.Width / 2, finalSize.Height / 2);
-
         return base.ArrangeOverride(finalSize);
+    }
+
+    void ViewSizeChanged(object sender, SizeChangedEventArgs e)
+    {
+        var sz = e.NewSize;
+        _offset = new Point(sz.Width / 2, sz.Height / 2);
     }
 
     public new IBrush? Background

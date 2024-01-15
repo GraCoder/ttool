@@ -22,7 +22,7 @@
 
   <UserControl.Resources>
     <cc:ViewSettingFlyout Placement="AnchorAndGravity" PlacementAnchor="TopRight" PlacementGravity="BottomLeft" x:Key="key_view_setting" />
-    <cc:SliderConverter x:Key="scale_converter" />
+    <!--cc:SliderConverter x:Key="scale_converter" /-->
   </UserControl.Resources>
 
   <Panel>
@@ -35,13 +35,5 @@
       />
 
   </Panel>
-
-  <!--Grid Grid.Row="1" RowDefinitions="*,*,*,*,*" ColumnDefinitions="*,*,*,*" Margin="10">
-          <Label Content="Unit"/>
-          <ComboBox x:Name="unitlist" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" SelectedIndex="{Binding #curvectl.UnitIndex}">
-            <ComboBoxItem>1</ComboBoxItem>
-            <ComboBoxItem>PI/2</ComboBoxItem>
-          </ComboBox>
-        </Grid-->
 
 </UserControl>

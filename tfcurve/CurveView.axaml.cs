@@ -164,7 +164,7 @@ public partial class CurveView : UserControl
             var cy = Math.Round(dy) + 0.5;
             context.DrawLine(pen, new Point(0, cy), new Point(w, cy));
 
-            if (Math.Abs(dy - _offset.Y) > 1e-6)
+            if (Math.Abs(dy - _offset.Y) > 1)
             {
                 var s = String.Format("{0:F3}", PY2Visual(dy));
                 //var ci = CultureInfo.GetCultureInfo("en-US");
@@ -181,7 +181,7 @@ public partial class CurveView : UserControl
             var cx = Math.Round(dx) + 0.5;
             context.DrawLine(pen, new Point(cx, 0), new Point(cx, h));
 
-            if (Math.Abs(dx - _offset.X) > 1e-6)
+            if (Math.Abs(dx - _offset.X) > 1)
             {
                 var s = String.Format("{0:F3}", PX2Visual(dx));
                 //var ci = CultureInfo.GetCultureInfo("en-US");

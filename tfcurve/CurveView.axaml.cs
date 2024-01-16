@@ -23,11 +23,14 @@ public partial class CurveView : UserControl
 {
     private int _unit_idx = 0;
 
-    private Point _offset;
-    private double _grid = 180;
-    private double _scale = 1.0;
-    private double _unit = 180;
-    private double _yscale = 1.0;
+    double _grid = 180;
+    double _scale = 1.0;
+    double _unit = 180;
+    double _yscale = 1.0;
+
+    Point _offset;
+    Point ?_hover_point = null;
+    Point ?_snap_point = null;
 
     private List<ICurve> _curves = [];
 
@@ -77,6 +80,16 @@ public partial class CurveView : UserControl
         get { return _yscale; }
         set { _yscale = value; InvalidateMeasure(); }
     }
+
+    public Point? HoverPoint
+    {
+        set { _hover_point = value;}
+    }
+    public Point? SnapPoint
+    {
+        set { _snap_point = value;}
+    }
+
 
     public void ResetCenter()
     {
@@ -153,8 +166,8 @@ public partial class CurveView : UserControl
 
             if (Math.Abs(dy - _offset.Y) > 1e-6)
             {
-                var s = String.Format("{0:F3}", py2visual(dy));
-                var ci = CultureInfo.GetCultureInfo("en-US");
+                var s = String.Format("{0:F3}", PY2Visual(dy));
+                //var ci = CultureInfo.GetCultureInfo("en-US");
                 var tf = new Typeface(FontFamily);
                 var text = new FormattedText(s, CultureInfo.CurrentCulture, FlowDirection.LeftToRight, tf, 16, new SolidColorBrush(Colors.Black));
                 context.DrawText(text, new Point(0, cy));
@@ -170,22 +183,51 @@ public partial class CurveView : UserControl
 
             if (Math.Abs(dx - _offset.X) > 1e-6)
             {
-                var s = String.Format("{0:F3}", px2visual(dx));
-                var ci = CultureInfo.GetCultureInfo("en-US");
+                var s = String.Format("{0:F3}", PX2Visual(dx));
+                //var ci = CultureInfo.GetCultureInfo("en-US");
                 var tf = new Typeface(FontFamily);
                 var text = new FormattedText(s, CultureInfo.CurrentCulture, FlowDirection.LeftToRight, tf, 16, new SolidColorBrush(Colors.Black));
                 context.DrawText(text, new Point(cx, 0));
             }
         }
 
-        context.DrawLine(new Pen(new SolidColorBrush(Colors.Red), 2),
-            new Point(0, Math.Round(_offset.Y)), new Point(w, Math.Round(_offset.Y)));
+        context.DrawLine(new Pen(new SolidColorBrush(Colors.Red), 1),
+            new Point(0, Math.Round(_offset.Y) + 0.5), new Point(w, Math.Round(_offset.Y) + 0.5));
 
         var g = new Avalonia.Media.Color(255, 0, 255, 0);
-        context.DrawLine(new Pen(new SolidColorBrush(g), 2),
-            new Point(Math.Round(_offset.X), 0), new Point(Math.Round(_offset.X), h));
+        context.DrawLine(new Pen(new SolidColorBrush(g), 1),
+            new Point(Math.Round(_offset.X) + 0.5, 0), new Point(Math.Round(_offset.X) + 0.5, h));
 
         drawFuns(context);
+
+        if (_snap_point != null)
+        {
+            Point pos = _snap_point.Value;
+            double x = PX2Visual(pos.X);
+            for(int i = 0; i < _curves.Count; i++)
+            {
+                var curve = _curves[i];
+                double f = curve.Value(x);
+                f = Visual2PY(f);
+                if(Math.Abs(f - pos.Y) < 6)
+                {
+                    var rect = new Rect(pos.X - 4, f - 4, 8, 8);
+                    var brush = new SolidColorBrush(Colors.CadetBlue);
+                    context.DrawEllipse(brush, new Pen(brush), rect);
+                    _hover_point = new Point(pos.X, f);
+                    break;
+                }
+            }
+        }
+
+        if (_hover_point != null)
+        {
+            Point pos = _hover_point.Value;
+            var s = string.Format("{0:F3},{1:F3}", PX2Visual(pos.X), PY2Visual(pos.Y));
+            var tf = new Typeface(FontFamily);
+            var text = new FormattedText(s, System.Globalization.CultureInfo.CurrentCulture, FlowDirection.LeftToRight, tf, 16, new SolidColorBrush(Colors.Black));
+            context.DrawText(text, new Point(pos.X, pos.Y - 20));
+        }
     }
 
     public void ClearCurve() { _curves.Clear(); }
@@ -197,17 +239,17 @@ public partial class CurveView : UserControl
         InvalidateVisual();
     }
 
-    double px2visual(double px)
+    public double PX2Visual(double px)
     {
         return (px - _offset.X) / _unit / _scale;
     }
 
-    double py2visual(double py)
+    public double PY2Visual(double py)
     {
         return (_offset.Y - py) / _unit / _scale;
     }
 
-    double visual2py(double y)
+    public double Visual2PY(double y)
     {
         var f = y * _unit * _scale * YScale;
         return Math.Round(-f + _offset.Y) + 0.5;
@@ -219,7 +261,7 @@ public partial class CurveView : UserControl
         var h = Bounds.Size.Height;
         for (int j = 0; j < _curves.Count; j++)
         {
-            _curves[j].DrawCurve(context, 0.5, w, px2visual, visual2py);
+            _curves[j].DrawCurve(context, 0.5, w, PX2Visual, Visual2PY);
         }
     }
 }

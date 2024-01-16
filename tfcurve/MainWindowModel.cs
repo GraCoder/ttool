@@ -33,6 +33,7 @@ public class MainWindowModel : ViewModelBase
                 new CurveObject{ Name = "Reinhard Tone", Curve = new ReinhardToneCurve() },
                 new CurveObject{ Name = "CE Tone", Curve = new CEToneCurve() },
                 new CurveObject{ Name = "Filmic Tone", Curve = new FilmicToneCurve() },
+                new CurveObject{ Name = "ACE Tone", Curve = new ACEToneCurve() },
                 new CurveObject{ Name = "Test", Curve = new TestCurve() },
         };
     }

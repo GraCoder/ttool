@@ -28,6 +28,18 @@ namespace tfcurve
             get { return _control.view.UnitIndex; }
         }
 
+        public bool HoverPoint
+        {
+            set { _control.HoverPoint = value; }
+            get { return _control.HoverPoint; }
+        }
+
+        public bool SnapPoint
+        {
+            set { _control.SnapPoint = value; }
+            get { return _control.SnapPoint; }
+        }
+
         public double ViewScale
         {
             get { return _view_scale; }

@@ -13,15 +13,22 @@ namespace tfcurve.curve;
 
 public interface ICurve
 {
+    public double Value(double x);
+
     public void DrawCurve(DrawingContext context, double xmin, double xmax, Func<double, double> px2v, Func<double, double> v2py);
 }
 
 public class SimpleCurve : ICurve
 {
     protected delegate double CurveFun(double v); 
-    protected CurveFun? _curveFun = null;
+    protected CurveFun? _curveFun;
 
-    public void DrawCurve(DrawingContext context, double xmin, double xmax, Func<double, double> px2v, Func<double, double> v2py)
+    public double Value(double x)
+    {
+        return _curveFun(x);
+    }
+
+    virtual public void DrawCurve(DrawingContext context, double xmin, double xmax, Func<double, double> px2v, Func<double, double> v2py)
     {
         if (_curveFun == null)
             return;
@@ -67,9 +74,14 @@ public class ExpCurve : SimpleCurve
 
 }
 
-public class TanCurve : ICurve
+public class TanCurve : SimpleCurve
 {
-    public void DrawCurve(DrawingContext context, double xmin, double xmax, Func<double, double> px2v, Func<double, double> v2py)
+    public TanCurve()
+    {
+        _curveFun = Math.Tan;
+    }
+
+    public sealed override void DrawCurve(DrawingContext context, double xmin, double xmax, Func<double, double> px2v, Func<double, double> v2py)
     {
         var poly = new PolylineGeometry();
         var brush = new SolidColorBrush(Colors.Black);

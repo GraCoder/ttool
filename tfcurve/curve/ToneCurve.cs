@@ -1,15 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using System.Threading.Tasks;
 using Avalonia.Media;
+using Pen = Avalonia.Media.Pen;
 
 namespace tfcurve.curve
 {
     public class ReinhardToneCurve : ICurve
     {
+        public double Value(double x)
+        {
+            return x / (x + 1.0);
+        }
+
         public void DrawCurve(DrawingContext context, double xmin, double xmax, Func<double, double> px2v, Func<double, double> v2py)
         {
             var polyline = new PolylineGeometry();
@@ -19,7 +20,7 @@ namespace tfcurve.curve
                 if (v < 0.00001)
                     continue;
 
-                v = v / (v + 1.0);
+                v = Value(v);
                 var y = v2py(v);
 
                 polyline.Points.Add(new Avalonia.Point(xmin, y));
@@ -32,6 +33,11 @@ namespace tfcurve.curve
 
     public class CEToneCurve : ICurve
     {
+        public double Value(double x)
+        {
+            return 1 - Math.Exp(x);
+        }
+
         public void DrawCurve(DrawingContext context, double xmin, double xmax, Func<double, double> px2v, Func<double, double> v2py)
         {
             const double adapted_lum = 1.0;
@@ -42,7 +48,7 @@ namespace tfcurve.curve
                 if (v < 0.0001)
                     continue;
 
-                v = 1 - Math.Exp(-adapted_lum * v);
+                v = Value(-adapted_lum * v);
                 var y = v2py(v);
 
                 polyline.Points.Add(new Avalonia.Point(xmin, y));
@@ -56,7 +62,7 @@ namespace tfcurve.curve
 
     public class FilmicToneCurve : ICurve
     {
-        double value(double x)
+        public double Value(double x)
         {
             const float A = 0.22f;
             const float B = 0.30f;
@@ -71,7 +77,7 @@ namespace tfcurve.curve
         public void DrawCurve(DrawingContext context, double xmin, double xmax, Func<double, double> px2v, Func<double, double> v2py)
         {
             const double adapted_lum = 1.0;
-            double white = value(11.2);
+            double white = Value(11.2);
             var polyline = new PolylineGeometry();
             for (; xmin < xmax; xmin++)
             {
@@ -80,7 +86,42 @@ namespace tfcurve.curve
                     continue;
 
 
-                v = value(1.6 * adapted_lum * v) / white;
+                v = Value(1.6 * adapted_lum * v) / white;
+                double y = v2py(v);
+
+                polyline.Points.Add(new Avalonia.Point(xmin, y));
+            }
+
+            var brush = new SolidColorBrush(Colors.Black);
+            context.DrawGeometry(null, new Pen(brush), polyline);
+        }
+    }
+
+    public class ACEToneCurve : ICurve
+    {
+        public double Value(double x)
+        {
+            const float A = 2.51f;
+            const float B = 0.03f;
+            const float C = 2.43f;
+            const float D = 0.59f;
+            const float E = 0.14f;
+
+            return (x * (A * x + B)) / (x * (C * x + D) + E);
+        }
+
+        public void DrawCurve(DrawingContext context, double xmin, double xmax, Func<double, double> px2v, Func<double, double> v2py)
+        {
+            const double adapted_lum = 1.0;
+            var polyline = new PolylineGeometry();
+            for (; xmin < xmax; xmin++)
+            {
+                var v = px2v(xmin);
+                if (v < 0.0001)
+                    continue;
+
+
+                v = Value(adapted_lum * v);
                 double y = v2py(v);
 
                 polyline.Points.Add(new Avalonia.Point(xmin, y));

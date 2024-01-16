@@ -13,6 +13,10 @@ internal class Quadratic : ICurve
     public double B { get; set; } = 0.0;
     public double C { get; set; } = 0.0;
 
+    public double Value(double x)
+    {
+        return A * x * x + B * x + C;
+    }
 
     public void DrawCurve(DrawingContext context, double xmin, double xmax, Func<double, double> px2v, Func<double, double> v2py)
     {
@@ -20,7 +24,7 @@ internal class Quadratic : ICurve
         for(; xmin < xmax; xmin++)
         {
             var v = px2v(xmin);
-            v = A * v * v + B * v + C;
+            v = Value(v);
             var y = v2py(v);
 
             polyline.Points.Add(new Avalonia.Point(xmin, y));

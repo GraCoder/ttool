@@ -27,7 +27,7 @@ internal class DepthCurve : ViewModelBase, ICurve
     public double TestInput
     {
         get {  return _test_input; }
-        set { _test_input = value; TestOutput = this.value(_test_input); }
+        set { _test_input = value; TestOutput = this.Value(_test_input); }
     }
 
     public double TestOutput
@@ -36,7 +36,7 @@ internal class DepthCurve : ViewModelBase, ICurve
         set { this.RaiseAndSetIfChanged(ref _test_output, value); }
     }
 
-    private double value(double v)
+    public double Value(double v)
     {
         if (NearMode)
             return (Near * Far) / (Near - Far) / v - Far / (Near - Far);
@@ -53,7 +53,7 @@ internal class DepthCurve : ViewModelBase, ICurve
             if (NearMode && v < 0)
                 continue;
             
-            v = value(v);
+            v = Value(v);
             var y = v2py(v);
 
             polyline.Points.Add(new Avalonia.Point(xmin, y));

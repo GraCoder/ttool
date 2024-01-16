@@ -37,12 +37,15 @@ public class ViewSettingFlyout : PopupFlyoutBase
 
 public partial class CurveControl : UserControl
 {
-    Point ?_prev_pos = null;
     ViewSettingFlyout? _setting = null;
+    Point ?_prev_point = null;
+    bool _hover_point = false;
+    bool _snap_point = false;
 
     public CurveControl()
     {
         InitializeComponent();
+        ZIndex = 1;
 
         DataContext = new CurveControlModel(this);
     }
@@ -59,9 +62,32 @@ public partial class CurveControl : UserControl
         _setting.ShowAt(this);
     }
 
-    public void Test()
+    public bool HoverPoint
     {
+        get { return _hover_point; }
+        set
+        {
+            _hover_point = value;
+            if (!_hover_point)
+            {
+                view.HoverPoint = null;
+                view.InvalidateMeasure();
+            }
+        } 
+    }
 
+    public bool SnapPoint
+    {
+        get { return _snap_point; }
+        set
+        {
+            _snap_point = value;
+            if(!_snap_point)
+            {
+                view.SnapPoint = null;
+                view.InvalidateVisual();
+            }
+        }
     }
 
     public void ResetScale()
@@ -90,7 +116,7 @@ public partial class CurveControl : UserControl
 
         if (e.GetCurrentPoint(this).Properties.IsLeftButtonPressed)
         {
-            _prev_pos = e.GetPosition(this);
+            _prev_point = e.GetPosition(this);
         }
 
     }
@@ -99,7 +125,7 @@ public partial class CurveControl : UserControl
     {
         base.OnPointerReleased(e);
 
-        _prev_pos = null;
+        _prev_point = null;
 
         if(_setting != null && _setting.IsOpen) {
             _setting.Hide();
@@ -109,12 +135,25 @@ public partial class CurveControl : UserControl
     protected override void OnPointerMoved(PointerEventArgs e)
     {
         base.OnPointerMoved(e);
-        if (_prev_pos != null && e.GetCurrentPoint(this).Properties.IsLeftButtonPressed)
+
+        if (_prev_point != null && e.GetCurrentPoint(this).Properties.IsLeftButtonPressed)
         {
             var pos = e.GetPosition(this);
-            view.Offset += pos - (Point)_prev_pos;
-            _prev_pos = pos;
+            view.Offset += pos - (Point)_prev_point;
+            _prev_point = pos;
             InvalidateVisual();
+        }
+
+        if(HoverPoint)
+        {
+            view.HoverPoint = e.GetPosition(view);
+            view.InvalidateVisual();
+        }
+
+        if(SnapPoint)
+        {
+            view.SnapPoint = e.GetPosition(view);
+            view.InvalidateVisual();
         }
     }
 

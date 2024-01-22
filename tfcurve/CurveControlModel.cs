@@ -44,7 +44,7 @@ namespace tfcurve
         {
             get { return _view_scale; }
             set { 
-                _control.ViewScale = value;
+                _control.ViewScale = Math.Clamp(value, -100, 100);
                 this.RaiseAndSetIfChanged(ref _view_scale, value); 
             }
         }

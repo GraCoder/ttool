@@ -9,9 +9,6 @@ namespace tfcurve.curve.page
 
     public partial class DepthSetting : Window
     {
-        public delegate void DelegateNotify();
-        public DelegateNotify ViewCallBack; 
-
         public DepthSetting()
         {
             InitializeComponent();
@@ -28,12 +25,12 @@ namespace tfcurve.curve.page
 
         public void ReqRedraw(decimal? v)
         {
-            if(ViewCallBack != null)
+            var cm = DataContext as CurveModel;
+            if(cm != null)
             {
-                ViewCallBack();
+                cm.RequestRedraw();
             }
         }
-
     }
 
 }

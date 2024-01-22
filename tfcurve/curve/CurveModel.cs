@@ -8,5 +8,15 @@ namespace tfcurve.curve
 {
     public class CurveModel : ViewModelBase
     {
+        public delegate void DelegateNotify();
+        public DelegateNotify? ViewUpdate; 
+
+        public void RequestRedraw()
+        {
+            if(ViewUpdate != null)
+            {
+                ViewUpdate();
+            }
+        }
     }
 }

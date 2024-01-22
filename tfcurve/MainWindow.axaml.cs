@@ -66,13 +66,15 @@ public partial class MainWindow : Window
         if (item is not CurveObject)
             return;
 
-        var curve_obj = (CurveObject)item;
-        if (curve_obj.Curve is DepthCurve)
+        var curve = ((CurveObject)item).Curve;
+        var dlg = curve.CreateParaSet(); 
+        if(dlg != null)
         {
-            var dlg = new curve.page.DepthSetting();
-            dlg.DataContext = curve_obj.Curve;
-            dlg.ViewCallBack = curve_control.UpdateView;
-
+            var cm = curve as CurveModel;
+            if(cm != null)
+            {
+                cm.ViewUpdate = curve_control.UpdateView;
+            }
             dlg.ShowDialog(this);
         }
     }

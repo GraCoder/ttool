@@ -16,6 +16,8 @@ public interface ICurve
     public double Value(double x);
 
     public void DrawCurve(DrawingContext context, double xmin, double xmax, Func<double, double> px2v, Func<double, double> v2py);
+
+    public Window? CreateParaSet() { return null; } 
 }
 
 public class SimpleCurve : ICurve

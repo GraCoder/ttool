@@ -10,12 +10,7 @@ using ReactiveUI;
 
 namespace tfcurve.curve;
 
-internal class DepthModel : ViewModelBase
-{
-
-}
-
-internal class DepthCurve : ViewModelBase, ICurve 
+internal class DepthCurve : CurveModel, ICurve 
 {
     public bool NearMode {  get; set; } = true;
     public double Near { get; set; } = 1.0;
@@ -63,4 +58,10 @@ internal class DepthCurve : ViewModelBase, ICurve
         context.DrawGeometry(null, new Pen(brush), polyline);
     }
 
+    public Window? CreateParaSet()
+    {
+        var dlg = new curve.page.DepthSetting();
+        dlg.DataContext = this;
+        return dlg;
+    }
 }

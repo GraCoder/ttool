@@ -16,7 +16,6 @@ public class CurveObject : CommunityToolkit.Mvvm.ComponentModel.ObservableObject
     public required ICurve Curve { get; set; }
 }
 
-
 public class MainWindowModel : ViewModelBase
 {
     private ObservableCollection<CurveObject> _curves;
@@ -24,8 +23,8 @@ public class MainWindowModel : ViewModelBase
     public MainWindowModel()
     {
         _curves = new ObservableCollection<CurveObject> {
-                new CurveObject{ Name = "Pow", Curve = new PowCurve() },
-                new CurveObject{ Name = "Exp", Curve = new ExpCurve() },
+                new CurveObject{ Name = "Pow(X^n)", Curve = new PowCurve() },
+                new CurveObject{ Name = "Exp(E^x)", Curve = new ExpCurve() },
                 new CurveObject{ Name = "Sin", Curve = new SinCurve() },
                 new CurveObject{ Name = "Cos", Curve = new CosCurve() },
                 new CurveObject{ Name = "Tan", Curve = new TanCurve() },

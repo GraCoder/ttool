@@ -16,6 +16,13 @@
   </Window.Resources>
 
   <Grid ColumnDefinitions="300,*">
+    <!--TreeView ItemsSource="{Binding CurveCate}" SelectionMode="Multiple">
+      <TreeView.ItemTemplate>
+        <TreeDataTemplate ItemsSource="{Binding CurveList}">
+          <TextBlock Text="{Binding Name}"/>
+        </TreeDataTemplate>
+      </TreeView.ItemTemplate>
+    </TreeView-->
     <ListBox x:Name="curve_list" Grid.Column="0" SelectionMode ="Multiple" ItemsSource ="{Binding CurveFuns,Mode = OneWay}">
       <ListBox.ItemTemplate>
         <DataTemplate>

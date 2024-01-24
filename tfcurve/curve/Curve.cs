@@ -67,15 +67,6 @@ public class CosCurve : SimpleCurve
     }
 }
 
-public class ExpCurve : SimpleCurve
-{
-    public ExpCurve()
-    {
-        _curveFun = Math.Exp;
-    }
-
-}
-
 public class TanCurve : SimpleCurve
 {
     public TanCurve()

@@ -166,7 +166,7 @@ public partial class CurveView : UserControl
 
             if (Math.Abs(dy - _offset.Y) > 1)
             {
-                var s = String.Format("{0:F3}", PY2Visual(dy));
+                var s = String.Format("{0:F2}", PY2Visual(dy));
                 //var ci = CultureInfo.GetCultureInfo("en-US");
                 var tf = new Typeface(FontFamily);
                 var text = new FormattedText(s, CultureInfo.CurrentCulture, FlowDirection.LeftToRight, tf, 16, new SolidColorBrush(Colors.Black));
@@ -183,7 +183,7 @@ public partial class CurveView : UserControl
 
             if (Math.Abs(dx - _offset.X) > 1)
             {
-                var s = String.Format("{0:F3}", PX2Visual(dx));
+                var s = String.Format("{0:F2}", PX2Visual(dx));
                 //var ci = CultureInfo.GetCultureInfo("en-US");
                 var tf = new Typeface(FontFamily);
                 var text = new FormattedText(s, CultureInfo.CurrentCulture, FlowDirection.LeftToRight, tf, 16, new SolidColorBrush(Colors.Black));
@@ -223,7 +223,7 @@ public partial class CurveView : UserControl
         if (_hover_point != null)
         {
             Point pos = _hover_point.Value;
-            var s = string.Format("{0:F3},{1:F3}", PX2Visual(pos.X), PY2Visual(pos.Y));
+            var s = string.Format("{0:F4},{1:F4}", PX2Visual(pos.X), PY2Visual(pos.Y));
             var tf = new Typeface(FontFamily);
             var text = new FormattedText(s, System.Globalization.CultureInfo.CurrentCulture, FlowDirection.LeftToRight, tf, 16, new SolidColorBrush(Colors.Black));
             context.DrawText(text, new Point(pos.X, pos.Y - 20));

@@ -9,24 +9,24 @@ using ReactiveUI;
 
 namespace tfcurve.curve
 {
-    internal class PowCurve : CurveModel, ICurve
+    public class ExpCurve : CurveModel, ICurve
     {
-        string _exps;
-        double _exp;
+        double _base;
+        string _base_str;
         string _except_string;
 
-        public double Exp { get { return _exp; } set { this.RaiseAndSetIfChanged(ref _exp, value); } }
+        public double Base { get { return _base; } set { this.RaiseAndSetIfChanged(ref _base, value); } }
 
         public string ExceptString { get { return _except_string; } set { this.RaiseAndSetIfChanged(ref _except_string, value); } }
 
-        public string ExpString
+        public string BaseString
         {
-            get { return _exps; }
+            get { return _base_str; }
             set
             {
-                _exps = value;
+                _base_str = value;
                 var eva = new ExpressionEvaluator();
-                double v = Exp;
+                double v = _base;
                 try
                 {
                     var ret = eva.Evaluate(value);
@@ -38,30 +38,20 @@ namespace tfcurve.curve
                     ExceptString = ex.Message;
                 }
 
-                Exp = v;
+                Base = v;
                 RequestRedraw();
             }
         }
 
-        public PowCurve()
+        public ExpCurve()
         {
-            Exp = 2.0; 
-            _exps = Exp.ToString();
+            Base = Math.E;
+            _base_str = Base.ToString();
         }
 
         public double Value(double v)
         {
-            if (Exp < 0)
-            {
-                if (v == 0)
-                    return double.PositiveInfinity;
-            }
-            else if(Exp < 1)
-            {
-
-            }
-
-            return Math.Pow(v, Exp);
+            return Math.Pow(Base, v);
         }
 
         public void DrawCurve(DrawingContext context, double xmin, double xmax, Func<double, double> px2v, Func<double, double> v2py)
@@ -71,25 +61,7 @@ namespace tfcurve.curve
             for (; xmin < xmax; xmin++)
             {
                 var v = px2v(xmin);
-                if (Exp < 0 && v == 0)
-                {
-                    if (polyline.Points.Count > 1)
-                    {
-                        context.DrawGeometry(null, new Pen(brush), polyline);
-                        polyline = new PolylineGeometry();
-                    }
-                    continue;
-                }
                 v = Value(v);
-                if(double.IsNaN(v) || double.IsInfinity(v))
-                {
-                    if (polyline.Points.Count > 1)
-                    {
-                        context.DrawGeometry(null, new Pen(brush), polyline);
-                        polyline = new PolylineGeometry();
-                    }
-                    continue;
-                }
                 var y = v2py(v);
 
                 polyline.Points.Add(new Avalonia.Point(xmin, y));
@@ -98,12 +70,16 @@ namespace tfcurve.curve
             context.DrawGeometry(null, new Pen(brush), polyline);
         }
 
+        public void ResetBase()
+        {
+            Base = Math.E;
+        }
+
         public Avalonia.Controls.Window? CreateParaSet()
         {
-            var dlg = new curve.page.PowSetting();
+            var dlg = new curve.page.ExpSetting();
             dlg.DataContext = this;
             return dlg;
         }
-
     }
 }

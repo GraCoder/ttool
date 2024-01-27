@@ -141,7 +141,7 @@ public partial class CurveControl : UserControl
             var pos = e.GetPosition(this);
             view.Offset += pos - (Point)_prev_point;
             _prev_point = pos;
-            InvalidateVisual();
+            view.InvalidateVisual();
         }
 
         if(HoverPoint)

@@ -11,9 +11,12 @@ namespace tfcurve.curve
 {
     public class ExpCurve : CurveModel, ICurve
     {
+        bool _inverse = false;
         double _base;
         string _base_str;
         string _except_string;
+
+        public bool Inverse { get { return _inverse; } set { _inverse = value; ViewUpdate(); } }
 
         public double Base { get { return _base; } set { this.RaiseAndSetIfChanged(ref _base, value); } }
 
@@ -51,6 +54,10 @@ namespace tfcurve.curve
 
         public double Value(double v)
         {
+            if(Inverse)
+            {
+                return Math.Log(v) / Math.Log(Base);
+            }
             return Math.Pow(Base, v);
         }
 
@@ -58,11 +65,27 @@ namespace tfcurve.curve
         {
             var brush = new SolidColorBrush(Colors.Black);
             var polyline = new PolylineGeometry();
+
             for (; xmin < xmax; xmin++)
             {
                 var v = px2v(xmin);
+
+                if (Inverse && v < 0)
+                    continue;
+
                 v = Value(v);
                 var y = v2py(v);
+
+                if (y < 0 || y > maxh)
+                {
+                    if (polyline.Points.Count > 0)
+                    {
+                        polyline.Points.Add(new Avalonia.Point(xmin, y));
+                        context.DrawGeometry(null, new Pen(brush), polyline);
+                        polyline = new PolylineGeometry();
+                    }
+                    continue;
+                }
 
                 polyline.Points.Add(new Avalonia.Point(xmin, y));
             }

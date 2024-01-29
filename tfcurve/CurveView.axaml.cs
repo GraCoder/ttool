@@ -23,9 +23,9 @@ public partial class CurveView : UserControl
 {
     private int _unit_idx = 0;
 
-    double _grid = 180;
+    double _grid = 180.0;
     double _scale = 1.0;
-    double _unit = 180;
+    double _unit = 180.0;
     double _yscale = 1.0;
 
     Point _offset;
@@ -241,12 +241,12 @@ public partial class CurveView : UserControl
 
     public double PX2Visual(double px)
     {
-        return (px - _offset.X) / _unit / _scale;
+        return (px - _offset.X) / (_unit * _scale);
     }
 
     public double PY2Visual(double py)
     {
-        return (_offset.Y - py) / _unit / _scale;
+        return (_offset.Y - py) / (_unit * _scale);
     }
 
     public double Visual2PY(double y)

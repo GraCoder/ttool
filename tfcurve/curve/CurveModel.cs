@@ -9,7 +9,9 @@ namespace tfcurve.curve
     public class CurveModel : ViewModelBase
     {
         public delegate void DelegateNotify();
-        public DelegateNotify? ViewUpdate; 
+        public DelegateNotify? ViewUpdate;
+
+        protected static double maxh = 4096;
 
         public void RequestRedraw()
         {

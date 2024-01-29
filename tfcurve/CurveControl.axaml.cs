@@ -110,6 +110,11 @@ public partial class CurveControl : UserControl
         }
     }
 
+    public sealed override void Render(DrawingContext context)
+    {
+        base.Render(context);
+    }
+
     protected override void OnPointerPressed(PointerPressedEventArgs e)
     {
         base.OnPointerPressed(e);
